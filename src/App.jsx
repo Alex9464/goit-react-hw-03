@@ -1,44 +1,57 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ContactForm from './components/ContactForm/ContactForm';
 import ContactList from './components/ContactList/ContactList';
 import SearchBox from './components/SearchBox/SearchBox';
-import { nanoid } from 'nanoid';
 
 const App = () => {
-  const [contacts, setContacts] = useState([
-    { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-    { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-    { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-    { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-  ]);
+  const [contacts, setContacts] = useState([]);
   const [filter, setFilter] = useState('');
 
-  const handleFilterChange = (value) => {
-    setFilter(value);
+  // Загружаем данные из localStorage при первом рендере
+  useEffect(() => {
+    const storedContacts = localStorage.getItem('contacts');
+    if (storedContacts) {
+      setContacts(JSON.parse(storedContacts));
+    }
+  }, []);
+
+  // Сохраняем данные в localStorage при изменении contacts
+  useEffect(() => {
+    if (contacts.length > 0) {
+      localStorage.setItem('contacts', JSON.stringify(contacts));
+    }
+  }, [contacts]);
+
+  // Функция добавления контакта
+  const addContact = (name, number) => {
+    const newContact = { id: Date.now(), name, number };
+    setContacts((prevContacts) => {
+      const updatedContacts = [...prevContacts, newContact];
+      localStorage.setItem('contacts', JSON.stringify(updatedContacts)); // обновляем localStorage
+      return updatedContacts;
+    });
   };
 
-  const addContact = (name, number) => {
-    const duplicate = contacts.find(
-      (contact) => contact.name.toLowerCase() === name.toLowerCase()
-    );
-    if (duplicate) {
-      alert(`${name} is already in contacts.`);
-      return;
-    }
-    const newContact = { id: nanoid(), name, number };
-    setContacts((prevContacts) => [...prevContacts, newContact]);
+  const deleteContact = (id) => {
+    const updatedContacts = contacts.filter((contact) => contact.id !== id);
+    setContacts(updatedContacts);
+    localStorage.setItem('contacts', JSON.stringify(updatedContacts)); // обновляем localStorage
+  };
+
+  const handleSearch = (event) => {
+    setFilter(event.target.value);
   };
 
   const filteredContacts = contacts.filter((contact) =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
+    contact.name && contact.name.toLowerCase().includes(filter.toLowerCase())
   );
 
   return (
     <div>
       <h1>Phonebook</h1>
-      <ContactForm onAddContact={addContact} />
-      <SearchBox filter={filter} onFilterChange={handleFilterChange} />
-      <ContactList contacts={filteredContacts} />
+      <ContactForm onSubmit={addContact} />
+      <SearchBox value={filter} onChange={handleSearch} />
+      <ContactList contacts={filteredContacts} onDeleteContact={deleteContact} />
     </div>
   );
 };

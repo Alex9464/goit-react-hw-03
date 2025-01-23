@@ -1,7 +1,7 @@
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-const ContactForm = ({ onAddContact }) => {
+const ContactForm = ({ onSubmit }) => {
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -17,8 +17,8 @@ const ContactForm = ({ onAddContact }) => {
         .required('Required'),
     }),
     onSubmit: (values, { resetForm }) => {
-      onAddContact(values.name, values.number);
-      resetForm();
+      onSubmit(values.name, values.number);  // передаем имя и номер
+      resetForm();  // очищаем форму
     },
   });
 
