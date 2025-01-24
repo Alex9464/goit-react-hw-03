@@ -34,7 +34,7 @@ const ContactForm = ({ onSubmit }) => {
         value={formik.values.name}
       />
       {formik.touched.name && formik.errors.name ? (
-        <div>{formik.errors.name}</div>
+        <div className='warning'>{formik.errors.name}</div>
       ) : null}
 
       <label htmlFor="number">Number</label>
@@ -47,7 +47,7 @@ const ContactForm = ({ onSubmit }) => {
         value={formik.values.number}
       />
       {formik.touched.number && formik.errors.number ? (
-        <div>{formik.errors.number}</div>
+        <div className='warning'>{formik.errors.number}</div>
       ) : null}
 
       <button type="submit">Add contact</button>

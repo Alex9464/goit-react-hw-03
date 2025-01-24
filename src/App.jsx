@@ -7,7 +7,6 @@ const App = () => {
   const [contacts, setContacts] = useState([]);
   const [filter, setFilter] = useState('');
 
-  // Загружаем данные из localStorage при первом рендере
   useEffect(() => {
     const storedContacts = localStorage.getItem('contacts');
     if (storedContacts) {
@@ -15,19 +14,17 @@ const App = () => {
     }
   }, []);
 
-  // Сохраняем данные в localStorage при изменении contacts
   useEffect(() => {
     if (contacts.length > 0) {
       localStorage.setItem('contacts', JSON.stringify(contacts));
     }
   }, [contacts]);
 
-  // Функция добавления контакта
   const addContact = (name, number) => {
     const newContact = { id: Date.now(), name, number };
     setContacts((prevContacts) => {
       const updatedContacts = [...prevContacts, newContact];
-      localStorage.setItem('contacts', JSON.stringify(updatedContacts)); // обновляем localStorage
+      localStorage.setItem('contacts', JSON.stringify(updatedContacts));
       return updatedContacts;
     });
   };
@@ -35,7 +32,7 @@ const App = () => {
   const deleteContact = (id) => {
     const updatedContacts = contacts.filter((contact) => contact.id !== id);
     setContacts(updatedContacts);
-    localStorage.setItem('contacts', JSON.stringify(updatedContacts)); // обновляем localStorage
+    localStorage.setItem('contacts', JSON.stringify(updatedContacts));
   };
 
   const handleSearch = (event) => {
@@ -51,7 +48,13 @@ const App = () => {
       <h1>Phonebook</h1>
       <ContactForm onSubmit={addContact} />
       <SearchBox value={filter} onChange={handleSearch} />
+      {filteredContacts.length > 0 ? (
       <ContactList contacts={filteredContacts} onDeleteContact={deleteContact} />
+    ) : (
+      <p style={{ textAlign: 'center', color: '#A0A0A0', marginTop: '20px' }}>
+        No contacts available.
+      </p>
+    )}
     </div>
   );
 };

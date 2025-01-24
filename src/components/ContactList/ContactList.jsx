@@ -1,8 +1,8 @@
 const ContactList = ({ contacts, onDeleteContact }) => {
   return (
-    <ul>
+    <ul className="ContactList">
       {contacts.map(({ id, name, number }) => (
-        <li key={id}>
+        <li className="ContactItem" key={id}>
           <p>
             {name}: {number}
           </p>
