@@ -35,8 +35,8 @@ const App = () => {
     localStorage.setItem('contacts', JSON.stringify(updatedContacts));
   };
 
-  const handleSearch = (event) => {
-    setFilter(event.target.value);
+  const handleSearch = (value) => {
+    setFilter(value);
   };
 
   const filteredContacts = contacts.filter((contact) =>
@@ -47,7 +47,7 @@ const App = () => {
     <div>
       <h1>Phonebook</h1>
       <ContactForm onSubmit={addContact} />
-      <SearchBox value={filter} onChange={handleSearch} />
+      <SearchBox filter={filter} onFilterChange={handleSearch} />
       {filteredContacts.length > 0 ? (
       <ContactList contacts={filteredContacts} onDeleteContact={deleteContact} />
     ) : (

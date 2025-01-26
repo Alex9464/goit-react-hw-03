@@ -17,8 +17,8 @@ const ContactForm = ({ onSubmit }) => {
         .required('Required'),
     }),
     onSubmit: (values, { resetForm }) => {
-      onSubmit(values.name, values.number);  // передаем имя и номер
-      resetForm();  // очищаем форму
+      onSubmit(values.name, values.number);
+      resetForm();
     },
   });
 
